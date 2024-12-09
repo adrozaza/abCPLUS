@@ -12,7 +12,7 @@ endif()
 project ("gestionh")
 
 # Add source to this project's executable.
-add_executable (gestionh "gestionh.cpp" "gestionh.h")
+add_executable (gestionh "Sistema.cpp" "Sistema.h" "Paciente.h" "Cita.h" "Medico.h" "Paciente.cpp" "Medico.cpp" "Cita.cpp" "Main.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET gestionh PROPERTY CXX_STANDARD 20)
