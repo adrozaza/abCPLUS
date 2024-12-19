@@ -15,7 +15,9 @@ int main() {
         std::cout << "3. Asignar Cita\n";
         std::cout << "4. Mostrar Pacientes\n";
         std::cout << "5. Mostrar Médicos\n";
-        std::cout << "6. Mostrar Citas\n";
+        std::cout << "6. Mostrar por especialidad\n";
+        std::cout << "7. Mostrar Citas\n";
+        std::cout << "8. Registrar historial\n";
         std::cout << "0. Salir\n";
         std::cout << "Seleccione una opción: ";
         std::cin >> opcion;
@@ -37,7 +39,13 @@ int main() {
             sistema.mostrarMedicos();
             break;
         case 6:
+            sistema.listarMedicosPorEspecialidad();
+            break;
+        case 7:
             sistema.mostrarCitas();
+            break;
+        case 8:
+            sistema.registrarHistorial();
             break;
         case 0:
             std::cout << "Saliendo del sistema...\n";

@@ -14,9 +14,16 @@ public:
     Medico(std::string id, std::string nombre, std::string especialidad)
         : id(id), nombre(nombre), especialidad(especialidad) {}
 
+    // Métodos de acceso
     std::string getId() const { return id; }
     std::string getNombre() const { return nombre; }
+    std::string getEspecialidad() const { return especialidad; }
+
+    // Métodos de presentación
     void mostrarInformacion() const;
+
+    // Constructor por defecto
+    Medico() = default;
 };
 
 #endif
