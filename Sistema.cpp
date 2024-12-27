@@ -222,7 +222,8 @@ void Sistema::asignarCita() {
 void Sistema::mostrarPacientes() const {
     if (pacientes.empty()) {
         std::cout << "No hay pacientes registrados.\n";
-    } else {
+    }
+    else {
         for (const auto& paciente : pacientes) {
             paciente.mostrarInformacion();
             std::cout << "-------------------------\n";
@@ -233,7 +234,8 @@ void Sistema::mostrarPacientes() const {
 void Sistema::mostrarMedicos() const {
     if (medicos.empty()) {
         std::cout << "No hay médicos registrados.\n";
-    } else {
+    }
+    else {
         for (const auto& medico : medicos) {
             medico.mostrarInformacion();
             std::cout << "-------------------------\n";
@@ -244,11 +246,11 @@ void Sistema::mostrarMedicos() const {
 void Sistema::mostrarCitas() const {
     if (citas.empty()) {
         std::cout << "No hay citas registradas.\n";
-    } else {
+    }
+    else {
         for (const auto& cita : citas) {
             cita.mostrarInformacion();
             std::cout << "-------------------------\n";
         }
     }
 }
-
