@@ -88,9 +88,13 @@ void menuCitas(Sistema& sistema) {
         system("cls");
         std::cout << "--- Gestión de Citas ---\n";
         std::cout << "1. Asignar Cita\n";
-        std::cout << "2. Mostrar Citas\n";
-        std::cout << "3. Registrar Historial\n";
-        std::cout << "4. Volver al Menú Principal\n";
+        std::cout << "2. Registrar cita pasada\n";
+        std::cout << "3. Mostrar Citas\n";
+        std::cout << "4. Ordenar Citas por Fecha\n";
+        std::cout << "5. Ordenar Citas por Urgencia\n";
+        std::cout << "6. Eliminar Cita\n";
+        std::cout << "7. Modificar Cita\n";
+        std::cout << "8. Volver al Menú Principal\n";
         std::cout << "Seleccione una opción: ";
         std::cin >> opcion;
         std::cin.ignore();
@@ -100,23 +104,37 @@ void menuCitas(Sistema& sistema) {
             sistema.asignarCita();
             break;
         case 2:
-            sistema.mostrarCitas();
+            sistema.registrarCitaPasada();
             break;
         case 3:
-            sistema.registrarHistorial();
+            sistema.mostrarCitas();
             break;
         case 4:
+            sistema.ordenarCitasPorFecha();
+            sistema.mostrarCitas();
+            break;
+        case 5:
+            sistema.ordenarCitasPorUrgencia();
+            sistema.mostrarCitas();
+            break;
+        case 6:
+            sistema.eliminarCita();
+            break;
+        case 7:
+            sistema.modificarCita();
+            break;
+        case 8:
             break;
         default:
             std::cout << "Opción inválida. Intente nuevamente.\n";
             break;
         }
 
-        if (opcion != 4) {
+        if (opcion != 8) {
             std::cout << "\nPresione cualquier tecla para continuar...";
             std::cin.get();
         }
-    } while (opcion != 4);
+    } while (opcion != 8);
 }
 
 int main() {

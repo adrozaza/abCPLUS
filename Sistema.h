@@ -9,9 +9,9 @@
 
 class Sistema {
 private:
-    std::vector<Paciente> pacientes;
-    std::vector<Medico> medicos;
-    std::vector<Cita> citas;
+    std::vector<Paciente> pacientes; // Lista de pacientes
+    std::vector<Medico> medicos;     // Lista de médicos
+    std::vector<Cita> citas;         // Lista de citas
 
 public:
     void registrarPaciente();
@@ -28,6 +28,15 @@ public:
     void mostrarPacientes() const;
     void mostrarMedicos() const;
     void mostrarCitas() const;
+
+    // Nuevas funciones
+    void ordenarCitasPorFecha();
+    void ordenarCitasPorUrgencia();
+
+    void registrarCitaPasada();
+    void eliminarCita();
+    void modificarCita();
+
 };
 
 #endif

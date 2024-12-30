@@ -175,35 +175,45 @@ void Sistema::asignarCita() {
     }
 
     std::string id, pacienteId, medicoId, fecha, hora, motivo;
+    int urgencia;
+
     std::cout << "Ingrese los datos de la cita:\n";
     std::cout << "ID Cita: ";
     std::cin >> id;
     std::cin.ignore();
+
     std::cout << "ID Paciente: ";
     std::cin >> pacienteId;
+
     std::cout << "ID Médico: ";
     std::cin >> medicoId;
+
     std::cin.ignore();
     std::cout << "Fecha (YYYY-MM-DD): ";
     std::cin >> fecha;
+
     std::cout << "Hora (HH:MM): ";
     std::cin >> hora;
+
     std::cin.ignore();
     std::cout << "Motivo: ";
     std::getline(std::cin, motivo);
 
-    // Buscar paciente y médico
-    Paciente* paciente = nullptr;
-    Medico* medico = nullptr;
+    std::cout << "Urgencia (1 = Alta, 2 = Media, 3 = Baja): ";
+    std::cin >> urgencia;
 
-    for (auto& p : pacientes) {
+    // Buscar paciente y médico
+    const Paciente* paciente = nullptr;
+    const Medico* medico = nullptr;
+
+    for (const auto& p : pacientes) {
         if (p.getId() == pacienteId) {
             paciente = &p;
             break;
         }
     }
 
-    for (auto& m : medicos) {
+    for (const auto& m : medicos) {
         if (m.getId() == medicoId) {
             medico = &m;
             break;
@@ -211,7 +221,7 @@ void Sistema::asignarCita() {
     }
 
     if (paciente && medico) {
-        citas.emplace_back(id, *paciente, *medico, fecha, hora, motivo);
+        citas.emplace_back(id, paciente, medico, fecha, hora, motivo, urgencia);
         std::cout << "Cita asignada con éxito.\n";
     }
     else {
@@ -253,4 +263,126 @@ void Sistema::mostrarCitas() const {
             std::cout << "-------------------------\n";
         }
     }
+}
+void Sistema::ordenarCitasPorFecha() {
+    std::sort(citas.begin(), citas.end(), [](const Cita& a, const Cita& b) {
+        return a.getFecha() < b.getFecha(); // Comparación lexicográfica de las fechas
+        });
+    std::cout << "Citas ordenadas por fecha.\n";
+}
+
+void Sistema::ordenarCitasPorUrgencia() {
+    std::sort(citas.begin(), citas.end(), [](const Cita& a, const Cita& b) {
+        return a.getUrgencia() < b.getUrgencia(); // Menor nivel de urgencia primero
+        });
+    std::cout << "Citas ordenadas por urgencia.\n";
+}
+
+void Sistema::registrarCitaPasada() {
+    std::string id, pacienteId, medicoId, fecha, hora, motivo;
+    int urgencia;
+    std::cout << "Ingrese los datos de la cita pasada:\n";
+    std::cout << "ID Cita: ";
+    std::cin >> id;
+    std::cin.ignore();
+
+    std::cout << "ID Paciente: ";
+    std::cin >> pacienteId;
+    const Paciente* paciente = nullptr;
+    for (const auto& p : pacientes) {
+        if (p.getId() == pacienteId) {
+            paciente = &p;
+            break;
+        }
+    }
+
+    if (!paciente) {
+        std::cout << "Paciente no encontrado.\n";
+        return;
+    }
+
+    std::cout << "ID Médico: ";
+    std::cin >> medicoId;
+    const Medico* medico = nullptr;
+    for (const auto& m : medicos) {
+        if (m.getId() == medicoId) {
+            medico = &m;
+            break;
+        }
+    }
+
+    if (!medico) {
+        std::cout << "Médico no encontrado.\n";
+        return;
+    }
+
+    std::cin.ignore();
+    std::cout << "Fecha (YYYY-MM-DD): ";
+    std::cin >> fecha;
+
+    std::cout << "Hora (HH:MM): ";
+    std::cin >> hora;
+
+    std::cin.ignore();
+    std::cout << "Motivo: ";
+    std::getline(std::cin, motivo);
+
+    std::cout << "Urgencia (1 = Alta, 2 = Media, 3 = Baja): ";
+    std::cin >> urgencia;
+
+    citas.emplace_back(id, paciente, medico, fecha, hora, motivo, urgencia);
+    std::cout << "Cita pasada registrada con éxito.\n";
+}
+
+void Sistema::eliminarCita() {
+    std::string id;
+    std::cout << "Ingrese el ID de la cita a eliminar: ";
+    std::cin >> id;
+
+    auto it = std::remove_if(citas.begin(), citas.end(), [&](const Cita& c) {
+        return c.getId() == id;
+        });
+
+    if (it != citas.end()) {
+        citas.erase(it, citas.end());
+        std::cout << "Cita eliminada con éxito.\n";
+    }
+    else {
+        std::cout << "Cita no encontrada.\n";
+    }
+}
+
+void Sistema::modificarCita() {
+    std::string id;
+    std::cout << "Ingrese el ID de la cita a modificar: ";
+    std::cin >> id;
+
+    for (auto& cita : citas) {
+        if (cita.getId() == id) {
+            std::cout << "Ingrese nuevos datos:\n";
+            std::string nuevaFecha, nuevaHora, nuevoMotivo;
+            int nuevaUrgencia;
+
+            std::cout << "Nueva Fecha (YYYY-MM-DD): ";
+            std::cin >> nuevaFecha;
+            cita.setFecha(nuevaFecha);
+
+            std::cout << "Nueva Hora (HH:MM): ";
+            std::cin >> nuevaHora;
+            cita.setHora(nuevaHora);
+
+            std::cout << "Nuevo Motivo: ";
+            std::cin.ignore();
+            std::getline(std::cin, nuevoMotivo);
+            cita.setMotivo(nuevoMotivo);
+
+            std::cout << "Nueva Urgencia (1 = Alta, 2 = Media, 3 = Baja): ";
+            std::cin >> nuevaUrgencia;
+            cita.setUrgencia(nuevaUrgencia);
+
+            std::cout << "Cita modificada con éxito.\n";
+            return;
+        }
+    }
+    std::cout << "Cita no encontrada.\n";
 }
