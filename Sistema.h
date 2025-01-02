@@ -37,6 +37,8 @@ public:
     void eliminarCita();
     void modificarCita();
 
+    void buscarPacientesPorFecha(const std::string& fechaInicio, const std::string& fechaFin);
+
 };
 
 #endif

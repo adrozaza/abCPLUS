@@ -19,7 +19,8 @@ void menuPacientes(Sistema& sistema) {
         std::cout << "--- Gestión de Pacientes ---\n";
         std::cout << "1. Registrar Paciente\n";
         std::cout << "2. Mostrar Pacientes\n";
-        std::cout << "3. Volver al Menú Principal\n";
+        std::cout << "3. Buscar Pacientes por Fecha\n"; // Nueva opción
+        std::cout << "4. Volver al Menú Principal\n";
         std::cout << "Seleccione una opción: ";
         std::cin >> opcion;
         std::cin.ignore();
@@ -31,18 +32,30 @@ void menuPacientes(Sistema& sistema) {
         case 2:
             sistema.mostrarPacientes();
             break;
-        case 3:
+        case 3: {
+            // Solicitar las fechas de inicio y fin
+            std::string fechaInicio, fechaFin;
+            std::cout << "Ingrese la fecha de inicio (YYYY-MM-DD): ";
+            std::cin >> fechaInicio;
+            std::cout << "Ingrese la fecha de fin (YYYY-MM-DD): ";
+            std::cin >> fechaFin;
+
+            // Llamar a la función para buscar pacientes por fecha
+            sistema.buscarPacientesPorFecha(fechaInicio, fechaFin);
+            break;
+        }
+        case 4:
             break;
         default:
             std::cout << "Opción inválida. Intente nuevamente.\n";
             break;
         }
 
-        if (opcion != 3) {
+        if (opcion != 4) {
             std::cout << "\nPresione cualquier tecla para continuar...";
             std::cin.get();
         }
-    } while (opcion != 3);
+    } while (opcion != 4);
 }
 
 void menuMedicos(Sistema& sistema) {

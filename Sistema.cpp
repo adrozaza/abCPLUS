@@ -386,3 +386,21 @@ void Sistema::modificarCita() {
     }
     std::cout << "Cita no encontrada.\n";
 }
+
+void Sistema::buscarPacientesPorFecha(const std::string& fechaInicio, const std::string& fechaFin) {
+    bool encontrado = false;  // Bandera para verificar si se encontró algún paciente
+
+    for (const auto& cita : citas) {
+        if (cita.getFecha() >= fechaInicio && cita.getFecha() <= fechaFin) {
+            cita.getPaciente()->mostrarInformacion();  // Mostramos los datos del paciente
+            std::cout << "-------------------------\n";
+            encontrado = true;  // Marcamos que se encontró al menos un paciente
+        }
+    }
+
+    // Si no se encontró ningún paciente, mostrar un mensaje
+    if (!encontrado) {
+        std::cout << "No se encontraron pacientes en el rango de fechas proporcionado.\n";
+    }
+    std::cin.get();
+}

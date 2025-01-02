@@ -17,22 +17,25 @@ private:
     int urgencia;               // Nivel de urgencia: 1 = Alta, 2 = Media, 3 = Baja
 
 public:
-    // Constructor
+    // Declaración del constructor sin definición en el archivo de encabezado
     Cita(std::string id, const Paciente* paciente, const Medico* medico,
         std::string fecha, std::string hora, std::string motivo, int urgencia);
 
-
-    // Métodos de acceso
+    // Métodos getter
+    const Paciente* getPaciente() const;
+    const Medico* getMedico() const;
     std::string getFecha() const;
+    std::string getHora() const;
+    std::string getMotivo() const;
     int getUrgencia() const;
+    std::string getId() const; // Agregar getter para ID
 
-    std::string getId() const { return id; }
-    void setFecha(const std::string& nuevaFecha) { fecha = nuevaFecha; }
-    void setHora(const std::string& nuevaHora) { hora = nuevaHora; }
-    void setMotivo(const std::string& nuevoMotivo) { motivo = nuevoMotivo; }
-    void setUrgencia(int nuevaUrgencia) { urgencia = nuevaUrgencia; }
+    // Métodos setter (si es necesario)
+    void setFecha(const std::string& fecha);  // Agregar setter para Fecha
+    void setHora(const std::string& hora);    // Agregar setter para Hora
+    void setMotivo(const std::string& motivo); // Agregar setter para Motivo
+    void setUrgencia(int urgencia);           // Agregar setter para Urgencia
 
-    // Método de presentación
     void mostrarInformacion() const;
 };
 
