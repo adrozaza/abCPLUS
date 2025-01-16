@@ -39,6 +39,12 @@ public:
 
     void buscarPacientesPorFecha(const std::string& fechaInicio, const std::string& fechaFin);
 
+    void cargarPacientesDesdeCSV(const std::string& ruta);
+    void guardarPacientesEnCSV(const std::string& ruta);
+    void cargarMedicosDesdeCSV(const std::string& ruta);
+    void guardarMedicosEnCSV(const std::string& ruta);
+    void cargarCitasDesdeCSV(const std::string& ruta);
+    void guardarCitasEnCSV(const std::string& ruta);
 };
 
 #endif

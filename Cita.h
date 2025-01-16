@@ -37,6 +37,11 @@ public:
     void setUrgencia(int urgencia);           // Agregar setter para Urgencia
 
     void mostrarInformacion() const;
+   
+    std::string toCSV() const; // Serializa una cita a CSV.
+    static Cita fromCSV(const std::string& lineaCSV,
+        const std::vector<Paciente>& pacientes,
+        const std::vector<Medico>& medicos); // Carga desde CSV.
 };
 
 #endif

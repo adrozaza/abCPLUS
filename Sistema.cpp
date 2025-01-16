@@ -1,6 +1,7 @@
 #include "Sistema.h"
 #include <iostream>
 #include <algorithm>
+#include <fstream>
 
 // Mantén las funciones originales como estaban.
 void Sistema::registrarPaciente() {
@@ -403,4 +404,84 @@ void Sistema::buscarPacientesPorFecha(const std::string& fechaInicio, const std:
         std::cout << "No se encontraron pacientes en el rango de fechas proporcionado.\n";
     }
     std::cin.get();
+}
+
+void Sistema::cargarMedicosDesdeCSV(const std::string& ruta) {
+    std::ifstream archivo(ruta);
+    if (!archivo.is_open()) {
+        std::cerr << "Error al abrir el archivo: " << ruta << "\n";
+        return;
+    }
+    std::string linea;
+    while (std::getline(archivo, linea)) {
+        medicos.push_back(Medico::fromCSV(linea));
+    }
+    archivo.close();
+}
+
+void Sistema::guardarMedicosEnCSV(const std::string& ruta) {
+    std::ofstream archivo(ruta);
+    if (!archivo.is_open()) {
+        std::cerr << "Error al abrir el archivo: " << ruta << "\n";
+        return;
+    }
+    for (const auto& medico : medicos) {
+        archivo << medico.toCSV() << "\n";
+    }
+    archivo.close();
+}
+
+void Sistema::cargarCitasDesdeCSV(const std::string& ruta) {
+    std::ifstream archivo(ruta);
+    if (!archivo.is_open()) {
+        std::cerr << "Error al abrir el archivo: " << ruta << "\n";
+        return;
+    }
+    std::string linea;
+    while (std::getline(archivo, linea)) {
+        try {
+            citas.push_back(Cita::fromCSV(linea, pacientes, medicos));
+        }
+        catch (const std::runtime_error& e) {
+            std::cerr << e.what() << "\n";
+        }
+    }
+    archivo.close();
+}
+
+void Sistema::guardarCitasEnCSV(const std::string& ruta) {
+    std::ofstream archivo(ruta);
+    if (!archivo.is_open()) {
+        std::cerr << "Error al abrir el archivo: " << ruta << "\n";
+        return;
+    }
+    for (const auto& cita : citas) {
+        archivo << cita.toCSV() << "\n";
+    }
+    archivo.close();
+}
+
+void Sistema::cargarPacientesDesdeCSV(const std::string& ruta) {
+    std::ifstream archivo(ruta);
+    if (!archivo.is_open()) {
+        std::cerr << "Error al abrir el archivo: " << ruta << "\n";
+        return;
+    }
+    std::string linea;
+    while (std::getline(archivo, linea)) {
+        pacientes.push_back(Paciente::fromCSV(linea));
+    }
+    archivo.close();
+}
+
+void Sistema::guardarPacientesEnCSV(const std::string& ruta) {
+    std::ofstream archivo(ruta);
+    if (!archivo.is_open()) {
+        std::cerr << "Error al abrir el archivo: " << ruta << "\n";
+        return;
+    }
+    for (const auto& paciente : pacientes) {
+        archivo << paciente.toCSV() << "\n";
+    }
+    archivo.close();
 }

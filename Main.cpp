@@ -155,6 +155,10 @@ int main() {
     SetConsoleOutputCP(CP_UTF8);
 
     Sistema sistema;
+    // Cargar datos al inicio
+    sistema.cargarPacientesDesdeCSV("pacientes.csv");
+    sistema.cargarMedicosDesdeCSV("medicos.csv");
+    sistema.cargarCitasDesdeCSV("citas.csv");
     int opcion;
 
     do {
@@ -180,6 +184,11 @@ int main() {
         }
 
     } while (opcion != 4);
+
+    // Guardar datos al final
+    sistema.guardarPacientesEnCSV("pacientes.csv");
+    sistema.guardarMedicosEnCSV("medicos.csv");
+    sistema.guardarCitasEnCSV("citas.csv");
 
     return 0;
 }

@@ -29,6 +29,9 @@ public:
     void setEmail(const std::string& nuevoEmail) { email = nuevoEmail; }
     void agregarHistorial(const std::string& entrada) { historialClinico.push_back(entrada); }
     void mostrarInformacion() const;
+
+    std::string toCSV() const; // Serializa un paciente a CSV.
+    static Paciente fromCSV(const std::string& lineaCSV); // Carga desde CSV.
 };
 
 #endif

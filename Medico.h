@@ -24,6 +24,9 @@ public:
 
     // Constructor por defecto
     Medico() = default;
+
+    std::string toCSV() const; // Serializa un médico a CSV.
+    static Medico fromCSV(const std::string& lineaCSV); // Carga desde CSV.
 };
 
 #endif
