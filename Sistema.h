@@ -15,13 +15,13 @@ private:
 
 public:
     void registrarPaciente();
-    void eliminarPaciente();
+    bool eliminarPaciente(const std::string& id); // Ahora devuelve un bool y recibe un ID
     void modificarPaciente();
     void buscarPaciente();
     void registrarHistorial();
 
     void registrarMedico();
-    void eliminarMedico();
+    bool eliminarMedico(const std::string& id); // Ahora recibe un ID y devuelve un bool
     void listarMedicosPorEspecialidad();
 
     void asignarCita();
@@ -45,6 +45,9 @@ public:
     void guardarMedicosEnCSV(const std::string& ruta);
     void cargarCitasDesdeCSV(const std::string& ruta);
     void guardarCitasEnCSV(const std::string& ruta);
+
+    void realizarBackup(const std::string& rutaBackup); // Método para realizar el respaldo.
+    void restaurarDesdeBackup(const std::string& rutaBackup); // Nuevo método para restaurar.
 };
 
 #endif

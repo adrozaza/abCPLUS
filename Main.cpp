@@ -8,7 +8,8 @@ void mostrarMenuPrincipal() {
     std::cout << "1. Gestión de Pacientes\n";
     std::cout << "2. Gestión de Médicos\n";
     std::cout << "3. Gestión de Citas\n";
-    std::cout << "4. Salir\n";
+    std::cout << "4. Backup de la Base de Datos\n"; // Opción de submenú
+    std::cout << "5. Salir\n";
     std::cout << "Seleccione una opción: ";
 }
 
@@ -19,8 +20,9 @@ void menuPacientes(Sistema& sistema) {
         std::cout << "--- Gestión de Pacientes ---\n";
         std::cout << "1. Registrar Paciente\n";
         std::cout << "2. Mostrar Pacientes\n";
-        std::cout << "3. Buscar Pacientes por Fecha\n"; // Nueva opción
-        std::cout << "4. Volver al Menú Principal\n";
+        std::cout << "3. Eliminar Paciente\n"; // Nueva opción
+        std::cout << "4. Buscar Pacientes por Fecha\n"; 
+        std::cout << "5. Volver al Menú Principal\n";
         std::cout << "Seleccione una opción: ";
         std::cin >> opcion;
         std::cin.ignore();
@@ -33,6 +35,21 @@ void menuPacientes(Sistema& sistema) {
             sistema.mostrarPacientes();
             break;
         case 3: {
+            std::string id;
+            std::cout << "Ingrese el ID del paciente a eliminar: ";
+            std::cin >> id;
+            if (sistema.eliminarPaciente(id)) {
+                std::cout << "Paciente eliminado con éxito.\n";
+            }
+            else {
+                std::cout << "Paciente no encontrado.\n";
+            }
+            std::cout << "Presione cualquier tecla para continuar...";
+            std::cin.ignore();
+            std::cin.get();
+            break;
+        }
+        case 4: {
             // Solicitar las fechas de inicio y fin
             std::string fechaInicio, fechaFin;
             std::cout << "Ingrese la fecha de inicio (YYYY-MM-DD): ";
@@ -44,18 +61,18 @@ void menuPacientes(Sistema& sistema) {
             sistema.buscarPacientesPorFecha(fechaInicio, fechaFin);
             break;
         }
-        case 4:
+        case 5:
             break;
         default:
             std::cout << "Opción inválida. Intente nuevamente.\n";
             break;
         }
 
-        if (opcion != 4) {
+        if (opcion != 5) {
             std::cout << "\nPresione cualquier tecla para continuar...";
             std::cin.get();
         }
-    } while (opcion != 4);
+    } while (opcion != 5);
 }
 
 void menuMedicos(Sistema& sistema) {
@@ -65,8 +82,9 @@ void menuMedicos(Sistema& sistema) {
         std::cout << "--- Gestión de Médicos ---\n";
         std::cout << "1. Registrar Médico\n";
         std::cout << "2. Mostrar Médicos\n";
-        std::cout << "3. Mostrar Médicos por Especialidad\n";
-        std::cout << "4. Volver al Menú Principal\n";
+        std::cout << "3. Eliminar Médico\n";
+        std::cout << "4. Mostrar Médicos por Especialidad\n";
+        std::cout << "5. Volver al Menú Principal\n";
         std::cout << "Seleccione una opción: ";
         std::cin >> opcion;
         std::cin.ignore();
@@ -78,21 +96,36 @@ void menuMedicos(Sistema& sistema) {
         case 2:
             sistema.mostrarMedicos();
             break;
-        case 3:
+        case 3: {
+            std::string id;
+            std::cout << "Ingrese el ID del médico a eliminar: ";
+            std::cin >> id;
+            if (sistema.eliminarMedico(id)) {
+                std::cout << "Médico eliminado con éxito.\n";
+            }
+            else {
+                std::cout << "Médico no encontrado.\n";
+            }
+            std::cout << "Presione cualquier tecla para continuar...";
+            std::cin.ignore();
+            std::cin.get();
+            break;
+        }
+        case 4:
             sistema.listarMedicosPorEspecialidad();
             break;
-        case 4:
+        case 5:
             break;
         default:
             std::cout << "Opción inválida. Intente nuevamente.\n";
             break;
         }
 
-        if (opcion != 4) {
+        if (opcion != 5) {
             std::cout << "\nPresione cualquier tecla para continuar...";
             std::cin.get();
         }
-    } while (opcion != 4);
+    } while (opcion != 5);
 }
 
 void menuCitas(Sistema& sistema) {
@@ -150,6 +183,52 @@ void menuCitas(Sistema& sistema) {
     } while (opcion != 8);
 }
 
+void menuBackup(Sistema& sistema) {
+    int opcionBackup;
+    do {
+        system("cls");
+        std::cout << "--- Menú de Backup ---\n";
+        std::cout << "1. Realizar Backup de la Base de Datos\n";
+        std::cout << "2. Restaurar Datos desde un Respaldo\n";
+        std::cout << "3. Volver al Menú Principal\n";
+        std::cout << "Seleccione una opción: ";
+        std::cin >> opcionBackup;
+        std::cin.ignore();
+
+        switch (opcionBackup) {
+        case 1: {
+            std::string rutaBackup;
+            std::cout << "Ingrese la ruta donde desea guardar el backup: ";
+            std::cin >> rutaBackup;
+            sistema.realizarBackup(rutaBackup);
+            std::cout << "Presione cualquier tecla para continuar...";
+            std::cin.ignore();
+            std::cin.get();
+            break;
+        }
+        case 2: {
+            std::string rutaBackup;
+            std::cout << "Ingrese la ruta del respaldo a restaurar: ";
+            std::cin >> rutaBackup;
+            sistema.restaurarDesdeBackup(rutaBackup);
+            std::cout << "Presione cualquier tecla para continuar...";
+            std::cin.ignore();
+            std::cin.get();
+            break;
+        }
+        case 3:
+            std::cout << "Volviendo al menú principal...\n";
+            break;
+        default:
+            std::cout << "Opción inválida. Intente nuevamente.\n";
+            std::cout << "Presione cualquier tecla para continuar...";
+            std::cin.ignore();
+            std::cin.get();
+        }
+    } while (opcionBackup != 3);
+}
+
+
 int main() {
     SetConsoleCP(CP_UTF8);
     SetConsoleOutputCP(CP_UTF8);
@@ -159,6 +238,7 @@ int main() {
     sistema.cargarPacientesDesdeCSV("pacientes.csv");
     sistema.cargarMedicosDesdeCSV("medicos.csv");
     sistema.cargarCitasDesdeCSV("citas.csv");
+
     int opcion;
 
     do {
@@ -177,18 +257,19 @@ int main() {
             menuCitas(sistema);
             break;
         case 4:
+            menuBackup(sistema); // Llama al submenú de backup
+            break;
+        case 5:
             std::cout << "Saliendo del sistema...\n";
             break;
         default:
             std::cout << "Opción inválida. Intente nuevamente.\n";
+            std::cout << "Presione cualquier tecla para continuar...";
+            std::cin.ignore();
+            std::cin.get();
         }
 
-    } while (opcion != 4);
-
-    // Guardar datos al final
-    sistema.guardarPacientesEnCSV("pacientes.csv");
-    sistema.guardarMedicosEnCSV("medicos.csv");
-    sistema.guardarCitasEnCSV("citas.csv");
+    } while (opcion != 5);
 
     return 0;
 }

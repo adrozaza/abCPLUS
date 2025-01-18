@@ -106,5 +106,5 @@ void Cita::mostrarInformacion() const {
         << "\nHora: " << hora << "\nMotivo: " << motivo
         << "\nUrgencia: " << urgencia
         << "\nPaciente: " << paciente->getNombre()  // Usamos getNombre de Paciente
-        << "\nMédico: " << medico->getNombre() << "\n";
+        << "\nMedico: " << medico->getNombre() << "\n";
 }

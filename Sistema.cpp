@@ -2,6 +2,10 @@
 #include <iostream>
 #include <algorithm>
 #include <fstream>
+#include <ctime>
+#include <iomanip>
+#include <sstream>
+#include <filesystem>
 
 // Mantén las funciones originales como estaban.
 void Sistema::registrarPaciente() {
@@ -33,22 +37,18 @@ void Sistema::registrarPaciente() {
     std::cout << "Paciente registrado con éxito.\n";
 }
 
-void Sistema::eliminarPaciente() {
-    std::string id;
-    std::cout << "Ingrese el ID del paciente a eliminar: ";
-    std::cin >> id;
-
-    auto it = std::remove_if(pacientes.begin(), pacientes.end(), [&](const Paciente& p) {
-        return p.getId() == id;
+bool Sistema::eliminarPaciente(const std::string& id) {
+    auto it = std::remove_if(pacientes.begin(), pacientes.end(),
+        [&id](const Paciente& paciente) {
+            return paciente.getId() == id;
         });
 
     if (it != pacientes.end()) {
         pacientes.erase(it, pacientes.end());
-        std::cout << "Paciente eliminado con éxito.\n";
+        return true; // Paciente eliminado
     }
-    else {
-        std::cout << "Paciente no encontrado.\n";
-    }
+
+    return false; // Paciente no encontrado
 }
 
 void Sistema::modificarPaciente() {
@@ -117,22 +117,18 @@ void Sistema::registrarHistorial() {
     std::cout << "Paciente no encontrado.\n";
 }
 
-void Sistema::eliminarMedico() {
-    std::string id;
-    std::cout << "Ingrese el ID del médico a eliminar: ";
-    std::cin >> id;
-
-    auto it = std::remove_if(medicos.begin(), medicos.end(), [&](const Medico& m) {
-        return m.getId() == id;
+bool Sistema::eliminarMedico(const std::string& id) {
+    auto it = std::remove_if(medicos.begin(), medicos.end(),
+        [&id](const Medico& medico) {
+            return medico.getId() == id;
         });
 
     if (it != medicos.end()) {
         medicos.erase(it, medicos.end());
-        std::cout << "Médico eliminado con éxito.\n";
+        return true; // Médico eliminado con éxito
     }
-    else {
-        std::cout << "Médico no encontrado.\n";
-    }
+
+    return false; // Médico no encontrado
 }
 
 void Sistema::listarMedicosPorEspecialidad() {
@@ -484,4 +480,59 @@ void Sistema::guardarPacientesEnCSV(const std::string& ruta) {
         archivo << paciente.toCSV() << "\n";
     }
     archivo.close();
+}
+
+void Sistema::realizarBackup(const std::string& rutaBackup) {
+    // Crear carpeta de respaldo si no existe
+    if (!std::filesystem::exists(rutaBackup)) {
+        std::filesystem::create_directory(rutaBackup);
+    }
+
+    // Obtener fecha y hora actuales
+    auto ahora = std::time(nullptr);
+    std::tm tiempoLocal;
+    localtime_s(&tiempoLocal, &ahora); // Para Windows, usa localtime_r en Linux/MacOS
+
+    // Crear un sufijo con la fecha y hora
+    std::ostringstream sufijo;
+    sufijo << std::put_time(&tiempoLocal, "%Y%m%d_%H%M%S");
+
+    // Rutas para los respaldos
+    std::string rutaPacientes = rutaBackup + "/pacientes_" + sufijo.str() + ".csv";
+    std::string rutaMedicos = rutaBackup + "/medicos_" + sufijo.str() + ".csv";
+    std::string rutaCitas = rutaBackup + "/citas_" + sufijo.str() + ".csv";
+
+    // Copiar archivos actuales a las rutas de respaldo
+    guardarPacientesEnCSV(rutaPacientes);
+    guardarMedicosEnCSV(rutaMedicos);
+    guardarCitasEnCSV(rutaCitas);
+
+    std::cout << "Respaldo realizado exitosamente en la carpeta: " << rutaBackup << "\n";
+}
+
+void Sistema::restaurarDesdeBackup(const std::string& rutaBackup) {
+    // Archivos de respaldo
+    std::string archivoPacientes = rutaBackup + "/pacientes.csv";
+    std::string archivoMedicos = rutaBackup + "/medicos.csv";
+    std::string archivoCitas = rutaBackup + "/citas.csv";
+
+    // Verificar la existencia de los archivos
+    if (!std::filesystem::exists(archivoPacientes) ||
+        !std::filesystem::exists(archivoMedicos) ||
+        !std::filesystem::exists(archivoCitas)) {
+        std::cerr << "Error: Uno o más archivos de respaldo no existen en la ruta especificada.\n";
+        return;
+    }
+
+    // Limpiar las listas actuales
+    pacientes.clear();
+    medicos.clear();
+    citas.clear();
+
+    // Cargar los datos desde los archivos de respaldo
+    cargarPacientesDesdeCSV(archivoPacientes);
+    cargarMedicosDesdeCSV(archivoMedicos);
+    cargarCitasDesdeCSV(archivoCitas);
+
+    std::cout << "Restauración completada exitosamente desde el respaldo en: " << rutaBackup << "\n";
 }
