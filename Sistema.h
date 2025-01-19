@@ -23,6 +23,7 @@ public:
     void mostrarPacientes() const;
     void buscarPacientesPorFecha(const std::string& fechaInicio, const std::string& fechaFin);
     void listarPacientesConEnfermedadesCronicas() const;
+    void buscarPacientesPorNombre() const;
 
     //historial
 

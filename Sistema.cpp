@@ -35,7 +35,7 @@ void Sistema::registrarPaciente() {
     std::cin.ignore();
 
     std::cout << "Enfermedades Crónicas (si no tiene, deje en blanco): ";
-    std::getline(std::cin, enfermedadesCronicas); // Quitamos std::cin.ignore(); previo a getline
+    std::getline(std::cin, enfermedadesCronicas);
 
     pacientes.emplace_back(id, nombre, fechaNacimiento, direccion, telefono, email, enfermedadesCronicas);
     std::cout << "Paciente registrado con éxito.\n";
@@ -162,6 +162,26 @@ void Sistema::listarPacientesConEnfermedadesCronicas() const {
 
     if (!encontrado) {
         std::cout << "No se encontraron pacientes con enfermedades crónicas.\n";
+    }
+}
+
+void Sistema::buscarPacientesPorNombre() const {
+    std::string nombreBuscado;
+    std::cout << "Ingrese el nombre o parte del nombre del paciente a buscar: ";
+    std::cin.ignore();
+    std::getline(std::cin, nombreBuscado);
+
+    bool encontrado = false;
+    std::cout << "--- Resultados de la Búsqueda ---\n";
+    for (const auto& paciente : pacientes) {
+        if (paciente.getNombre().find(nombreBuscado) != std::string::npos) { // Búsqueda parcial
+            paciente.mostrarInformacion();
+            encontrado = true;
+        }
+    }
+
+    if (!encontrado) {
+        std::cout << "No se encontraron pacientes con el nombre proporcionado.\n";
     }
 }
 
@@ -444,6 +464,55 @@ void Sistema::modificarCita() {
     std::cout << "Cita no encontrada.\n";
 }
 
+void Sistema::listarCitasPorMedicoOEspecialidad() const {
+    int opcion;
+    std::cout << "--- Listar Citas por Médico o Especialidad ---\n";
+    std::cout << "1. Listar por Médico\n";
+    std::cout << "2. Listar por Especialidad\n";
+    std::cout << "Seleccione una opción: ";
+    std::cin >> opcion;
+    std::cin.ignore();
+
+    if (opcion == 1) {
+        std::string idMedico;
+        std::cout << "Ingrese el ID del médico: ";
+        std::cin >> idMedico;
+        std::cin.ignore();
+
+        bool encontrado = false;
+        for (const auto& cita : citas) {
+            if (cita.getMedico()->getId() == idMedico) {
+                cita.mostrarInformacion();
+                encontrado = true;
+            }
+        }
+
+        if (!encontrado) {
+            std::cout << "No se encontraron citas para el médico con ID: " << idMedico << "\n";
+        }
+    }
+    else if (opcion == 2) {
+        std::string especialidad;
+        std::cout << "Ingrese la especialidad: ";
+        std::getline(std::cin, especialidad);
+
+        bool encontrado = false;
+        for (const auto& cita : citas) {
+            if (cita.getMedico()->getEspecialidad() == especialidad) {
+                cita.mostrarInformacion();
+                encontrado = true;
+            }
+        }
+
+        if (!encontrado) {
+            std::cout << "No se encontraron citas para la especialidad: " << especialidad << "\n";
+        }
+    }
+    else {
+        std::cout << "Opción inválida.\n";
+    }
+}
+
 //csv
 
 void Sistema::cargarMedicosDesdeCSV(const std::string& ruta) {
@@ -525,56 +594,6 @@ void Sistema::guardarPacientesEnCSV(const std::string& ruta) {
     }
     archivo.close();
 }
-
-void Sistema::listarCitasPorMedicoOEspecialidad() const {
-    int opcion;
-    std::cout << "--- Listar Citas por Médico o Especialidad ---\n";
-    std::cout << "1. Listar por Médico\n";
-    std::cout << "2. Listar por Especialidad\n";
-    std::cout << "Seleccione una opción: ";
-    std::cin >> opcion;
-    std::cin.ignore();
-
-    if (opcion == 1) {
-        std::string idMedico;
-        std::cout << "Ingrese el ID del médico: ";
-        std::cin >> idMedico;
-        std::cin.ignore();
-
-        bool encontrado = false;
-        for (const auto& cita : citas) {
-            if (cita.getMedico()->getId() == idMedico) {
-                cita.mostrarInformacion();
-                encontrado = true;
-            }
-        }
-
-        if (!encontrado) {
-            std::cout << "No se encontraron citas para el médico con ID: " << idMedico << "\n";
-        }
-    }
-    else if (opcion == 2) {
-        std::string especialidad;
-        std::cout << "Ingrese la especialidad: ";
-        std::getline(std::cin, especialidad);
-
-        bool encontrado = false;
-        for (const auto& cita : citas) {
-            if (cita.getMedico()->getEspecialidad() == especialidad) {
-                cita.mostrarInformacion();
-                encontrado = true;
-            }
-        }
-
-        if (!encontrado) {
-            std::cout << "No se encontraron citas para la especialidad: " << especialidad << "\n";
-        }
-    }
-    else {
-        std::cout << "Opción inválida.\n";
-    }
-}
-
 
 //backup
 

@@ -47,9 +47,6 @@ Cita Cita::fromCSV(const std::string& lineaCSV,
     return Cita(id, paciente, medico, fecha, hora, motivo, urgencia);
 }
 
-
-
-
 // Definición del constructor
 Cita::Cita(std::string id, const Paciente* paciente, const Medico* medico,
     std::string fecha, std::string hora, std::string motivo, int urgencia)

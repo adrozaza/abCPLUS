@@ -13,6 +13,50 @@ void mostrarMenuPrincipal() {
     std::cout << "Seleccione una opción: ";
 }
 
+//pacientes
+
+void menuBuscarPacientes(Sistema& sistema) {
+    int opcion;
+    do {
+        system("cls");
+        std::cout << "--- Submenú: Buscar Pacientes ---\n";
+        std::cout << "1. Buscar Pacientes por Fecha\n";
+        std::cout << "2. Buscar Pacientes por Nombre\n";
+        std::cout << "3. Buscar Pacientes por Enfermedades Crónicas\n";
+        std::cout << "4. Volver al Menú Principal\n";
+        std::cout << "Seleccione una opción: ";
+        std::cin >> opcion;
+        std::cin.ignore();
+
+        switch (opcion) {
+        case 1: {
+            std::string fechaInicio, fechaFin;
+            std::cout << "Ingrese la fecha de inicio (YYYY-MM-DD): ";
+            std::cin >> fechaInicio;
+            std::cout << "Ingrese la fecha de fin (YYYY-MM-DD): ";
+            std::cin >> fechaFin;
+            sistema.buscarPacientesPorFecha(fechaInicio, fechaFin);
+            break;
+        }
+        case 2:
+            sistema.buscarPacientesPorNombre();
+            break;
+        case 3:
+            sistema.listarPacientesConEnfermedadesCronicas();
+            break;
+        case 4:
+            break;
+        default:
+            std::cout << "Opción inválida. Intente nuevamente.\n";
+        }
+
+        if (opcion != 4) {
+            std::cout << "\nPresione cualquier tecla para continuar...";
+            std::cin.get();
+        }
+    } while (opcion != 4);
+}
+
 void menuPacientes(Sistema& sistema) {
     int opcion;
     do {
@@ -21,10 +65,9 @@ void menuPacientes(Sistema& sistema) {
         std::cout << "1. Registrar Paciente\n";
         std::cout << "2. Mostrar Pacientes\n";
         std::cout << "3. Eliminar Paciente\n";
-        std::cout << "4. Buscar Pacientes por Fecha\n";
-        std::cout << "5. Modificar Paciente\n"; // Nueva opción
-        std::cout << "6. Listar Pacientes con Enfermedades Crónicas\n"; // Nueva opción
-        std::cout << "7. Volver al Menú Principal\n";
+        std::cout << "4. Buscar Pacientes\n"; // Accede al submenú
+        std::cout << "5. Modificar Paciente\n";
+        std::cout << "6. Volver al Menú Principal\n";
         std::cout << "Seleccione una opción: ";
         std::cin >> opcion;
         std::cin.ignore();
@@ -51,18 +94,9 @@ void menuPacientes(Sistema& sistema) {
             std::cin.get();
             break;
         }
-        case 4: {
-            // Solicitar las fechas de inicio y fin
-            std::string fechaInicio, fechaFin;
-            std::cout << "Ingrese la fecha de inicio (YYYY-MM-DD): ";
-            std::cin >> fechaInicio;
-            std::cout << "Ingrese la fecha de fin (YYYY-MM-DD): ";
-            std::cin >> fechaFin;
-
-            // Llamar a la función para buscar pacientes por fecha
-            sistema.buscarPacientesPorFecha(fechaInicio, fechaFin);
+        case 4:
+            menuBuscarPacientes(sistema);
             break;
-        }
         case 5: {
             std::string id;
             std::cout << "Ingrese el ID del paciente a modificar: ";
@@ -71,21 +105,19 @@ void menuPacientes(Sistema& sistema) {
             break;
         }
         case 6:
-            sistema.listarPacientesConEnfermedadesCronicas();
-            break;
-        case 7:
             break;
         default:
             std::cout << "Opción inválida. Intente nuevamente.\n";
-            break;
         }
 
-        if (opcion != 7) {
+        if (opcion != 6) {
             std::cout << "\nPresione cualquier tecla para continuar...";
             std::cin.get();
         }
-    } while (opcion != 7);
+    } while (opcion != 6);
 }
+
+//medicos
 
 void menuMedicos(Sistema& sistema) {
     int opcion;
@@ -140,6 +172,46 @@ void menuMedicos(Sistema& sistema) {
     } while (opcion != 5);
 }
 
+// citas
+
+void menuBuscarCitas(Sistema& sistema) {
+    int opcion;
+    do {
+        system("cls");
+        std::cout << "--- Submenú: Buscar Citas ---\n";
+        std::cout << "1. Ordenar Citas por Fecha\n";
+        std::cout << "2. Ordenar Citas por Urgencia\n";
+        std::cout << "3. Listar Citas por Médico o Especialidad\n";
+        std::cout << "4. Volver al Menú Principal\n";
+        std::cout << "Seleccione una opción: ";
+        std::cin >> opcion;
+        std::cin.ignore();
+
+        switch (opcion) {
+        case 1:
+            sistema.ordenarCitasPorFecha();
+            sistema.mostrarCitas();
+            break;
+        case 2:
+            sistema.ordenarCitasPorUrgencia();
+            sistema.mostrarCitas();
+            break;
+        case 3:
+            sistema.listarCitasPorMedicoOEspecialidad();
+            break;
+        case 4:
+            break;
+        default:
+            std::cout << "Opción inválida. Intente nuevamente.\n";
+        }
+
+        if (opcion != 4) {
+            std::cout << "\nPresione cualquier tecla para continuar...";
+            std::cin.get();
+        }
+    } while (opcion != 4);
+}
+
 void menuCitas(Sistema& sistema) {
     int opcion;
     do {
@@ -148,12 +220,10 @@ void menuCitas(Sistema& sistema) {
         std::cout << "1. Asignar Cita\n";
         std::cout << "2. Registrar cita pasada\n";
         std::cout << "3. Mostrar Citas\n";
-        std::cout << "4. Ordenar Citas por Fecha\n";
-        std::cout << "5. Ordenar Citas por Urgencia\n";
-        std::cout << "6. Listar Citas por Médico o Especialidad\n"; // Nueva opción
-        std::cout << "7. Eliminar Cita\n";
-        std::cout << "8. Modificar Cita\n";
-        std::cout << "9. Volver al Menú Principal\n";
+        std::cout << "4. Buscar Citas\n"; // Accede al submenú
+        std::cout << "5. Eliminar Cita\n";
+        std::cout << "6. Modificar Cita\n";
+        std::cout << "7. Volver al Menú Principal\n";
         std::cout << "Seleccione una opción: ";
         std::cin >> opcion;
         std::cin.ignore();
@@ -169,35 +239,29 @@ void menuCitas(Sistema& sistema) {
             sistema.mostrarCitas();
             break;
         case 4:
-            sistema.ordenarCitasPorFecha();
-            sistema.mostrarCitas();
+            menuBuscarCitas(sistema);
             break;
         case 5:
-            sistema.ordenarCitasPorUrgencia();
-            sistema.mostrarCitas();
-            break;
-        case 6:
-            sistema.listarCitasPorMedicoOEspecialidad();
-            break;
-        case 7:
             sistema.eliminarCita();
             break;
-        case 8:
+        case 6:
             sistema.modificarCita();
             break;
-        case 9:
+        case 7:
             break;
         default:
             std::cout << "Opción inválida. Intente nuevamente.\n";
             break;
         }
 
-        if (opcion != 9) {
+        if (opcion != 7) {
             std::cout << "\nPresione cualquier tecla para continuar...";
             std::cin.get();
         }
-    } while (opcion != 9);
+    } while (opcion != 7);
 }
+
+//Backup
 
 void menuBackup(Sistema& sistema) {
     int opcionBackup;
@@ -243,6 +307,8 @@ void menuBackup(Sistema& sistema) {
         }
     } while (opcionBackup != 3);
 }
+
+//main
 
 int main() {
     SetConsoleCP(CP_UTF8);
