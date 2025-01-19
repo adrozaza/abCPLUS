@@ -20,9 +20,11 @@ void menuPacientes(Sistema& sistema) {
         std::cout << "--- Gestión de Pacientes ---\n";
         std::cout << "1. Registrar Paciente\n";
         std::cout << "2. Mostrar Pacientes\n";
-        std::cout << "3. Eliminar Paciente\n"; // Nueva opción
-        std::cout << "4. Buscar Pacientes por Fecha\n"; 
-        std::cout << "5. Volver al Menú Principal\n";
+        std::cout << "3. Eliminar Paciente\n";
+        std::cout << "4. Buscar Pacientes por Fecha\n";
+        std::cout << "5. Modificar Paciente\n"; // Nueva opción
+        std::cout << "6. Listar Pacientes con Enfermedades Crónicas\n"; // Nueva opción
+        std::cout << "7. Volver al Menú Principal\n";
         std::cout << "Seleccione una opción: ";
         std::cin >> opcion;
         std::cin.ignore();
@@ -61,18 +63,28 @@ void menuPacientes(Sistema& sistema) {
             sistema.buscarPacientesPorFecha(fechaInicio, fechaFin);
             break;
         }
-        case 5:
+        case 5: {
+            std::string id;
+            std::cout << "Ingrese el ID del paciente a modificar: ";
+            std::cin >> id;
+            sistema.modificarPaciente(id);
+            break;
+        }
+        case 6:
+            sistema.listarPacientesConEnfermedadesCronicas();
+            break;
+        case 7:
             break;
         default:
             std::cout << "Opción inválida. Intente nuevamente.\n";
             break;
         }
 
-        if (opcion != 5) {
+        if (opcion != 7) {
             std::cout << "\nPresione cualquier tecla para continuar...";
             std::cin.get();
         }
-    } while (opcion != 5);
+    } while (opcion != 7);
 }
 
 void menuMedicos(Sistema& sistema) {
@@ -228,7 +240,6 @@ void menuBackup(Sistema& sistema) {
     } while (opcionBackup != 3);
 }
 
-
 int main() {
     SetConsoleCP(CP_UTF8);
     SetConsoleOutputCP(CP_UTF8);
@@ -270,6 +281,10 @@ int main() {
         }
 
     } while (opcion != 5);
+
+    sistema.guardarPacientesEnCSV("pacientes.csv");
+    sistema.guardarMedicosEnCSV("medicos.csv");
+    sistema.guardarCitasEnCSV("citas.csv");
 
     return 0;
 }

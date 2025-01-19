@@ -7,9 +7,10 @@
 #include <sstream>
 #include <filesystem>
 
-// Mantén las funciones originales como estaban.
+//pacientes
+
 void Sistema::registrarPaciente() {
-    std::string id, nombre, fechaNacimiento, direccion, telefono, email;
+    std::string id, nombre, fechaNacimiento, direccion, telefono, email, enfermedadesCronicas;
     std::cout << "Ingrese los datos del paciente:\n";
     std::cout << "ID: ";
     std::cin >> id;
@@ -33,7 +34,10 @@ void Sistema::registrarPaciente() {
     std::cin >> email;
     std::cin.ignore();
 
-    pacientes.emplace_back(id, nombre, fechaNacimiento, direccion, telefono, email);
+    std::cout << "Enfermedades Crónicas (si no tiene, deje en blanco): ";
+    std::getline(std::cin, enfermedadesCronicas); // Quitamos std::cin.ignore(); previo a getline
+
+    pacientes.emplace_back(id, nombre, fechaNacimiento, direccion, telefono, email, enfermedadesCronicas);
     std::cout << "Paciente registrado con éxito.\n";
 }
 
@@ -51,32 +55,47 @@ bool Sistema::eliminarPaciente(const std::string& id) {
     return false; // Paciente no encontrado
 }
 
-void Sistema::modificarPaciente() {
-    std::string id;
-    std::cout << "Ingrese el ID del paciente a modificar: ";
-    std::cin >> id;
-
+void Sistema::modificarPaciente(const std::string& id) {
     for (auto& paciente : pacientes) {
         if (paciente.getId() == id) {
-            std::cout << "Ingrese nuevos datos:\n";
-            std::string nombre, direccion, telefono, email;
+            std::cout << "Ingrese nuevos datos o deje en blanco para no modificar:\n";
+            std::string nombre, direccion, telefono, email, enfermedadesCronicas;
 
-            std::cout << "Nombre: ";
+            // Modificar nombre
+            std::cout << "Nombre (Actual: " << paciente.getNombre() << "): ";
             std::cin.ignore();
             std::getline(std::cin, nombre);
-            paciente.setNombre(nombre);
+            if (!nombre.empty()) {
+                paciente.setNombre(nombre);
+            }
 
-            std::cout << "Dirección: ";
+            // Modificar dirección
+            std::cout << "Dirección (Actual: " << paciente.getDireccion() << "): ";
             std::getline(std::cin, direccion);
-            paciente.setDireccion(direccion);
+            if (!direccion.empty()) {
+                paciente.setDireccion(direccion);
+            }
 
-            std::cout << "Teléfono: ";
-            std::cin >> telefono;
-            paciente.setTelefono(telefono);
+            // Modificar teléfono
+            std::cout << "Teléfono (Actual: " << paciente.getTelefono() << "): ";
+            std::getline(std::cin, telefono);
+            if (!telefono.empty()) {
+                paciente.setTelefono(telefono);
+            }
 
-            std::cout << "Email: ";
-            std::cin >> email;
-            paciente.setEmail(email);
+            // Modificar email
+            std::cout << "Email (Actual: " << paciente.getEmail() << "): ";
+            std::getline(std::cin, email);
+            if (!email.empty()) {
+                paciente.setEmail(email);
+            }
+
+            // Modificar enfermedades crónicas
+            std::cout << "Enfermedades Crónicas (Actual: " << paciente.getEnfermedadesCronicas() << "): ";
+            std::getline(std::cin, enfermedadesCronicas);
+            if (!enfermedadesCronicas.empty()) {
+                paciente.setEnfermedadesCronicas(enfermedadesCronicas);
+            }
 
             std::cout << "Paciente modificado con éxito.\n";
             return;
@@ -100,6 +119,54 @@ void Sistema::buscarPaciente() {
     std::cout << "Paciente no encontrado.\n";
 }
 
+void Sistema::mostrarPacientes() const {
+    if (pacientes.empty()) {
+        std::cout << "No hay pacientes registrados.\n";
+    }
+    else {
+        for (const auto& paciente : pacientes) {
+            paciente.mostrarInformacion();
+            std::cout << "-------------------------\n";
+        }
+    }
+}
+
+void Sistema::buscarPacientesPorFecha(const std::string& fechaInicio, const std::string& fechaFin) {
+    bool encontrado = false;  // Bandera para verificar si se encontró algún paciente
+
+    for (const auto& cita : citas) {
+        if (cita.getFecha() >= fechaInicio && cita.getFecha() <= fechaFin) {
+            cita.getPaciente()->mostrarInformacion();  // Mostramos los datos del paciente
+            std::cout << "-------------------------\n";
+            encontrado = true;  // Marcamos que se encontró al menos un paciente
+        }
+    }
+
+    // Si no se encontró ningún paciente, mostrar un mensaje
+    if (!encontrado) {
+        std::cout << "No se encontraron pacientes en el rango de fechas proporcionado.\n";
+    }
+    std::cin.get();
+}
+
+void Sistema::listarPacientesConEnfermedadesCronicas() const {
+    bool encontrado = false;
+    std::cout << "--- Pacientes con Enfermedades Crónicas ---\n";
+
+    for (const auto& paciente : pacientes) {
+        if (!paciente.getEnfermedadesCronicas().empty()) { // Verifica si tiene enfermedades crónicas
+            paciente.mostrarInformacion();
+            encontrado = true;
+        }
+    }
+
+    if (!encontrado) {
+        std::cout << "No se encontraron pacientes con enfermedades crónicas.\n";
+    }
+}
+
+//historial
+
 void Sistema::registrarHistorial() {
     std::string id, historial;
     std::cout << "Ingrese el ID del paciente: ";
@@ -116,6 +183,8 @@ void Sistema::registrarHistorial() {
     }
     std::cout << "Paciente no encontrado.\n";
 }
+
+//medicos
 
 bool Sistema::eliminarMedico(const std::string& id) {
     auto it = std::remove_if(medicos.begin(), medicos.end(),
@@ -164,6 +233,20 @@ void Sistema::registrarMedico() {
     medicos.emplace_back(id, nombre, especialidad);
     std::cout << "Médico registrado con éxito.\n";
 }
+
+void Sistema::mostrarMedicos() const {
+    if (medicos.empty()) {
+        std::cout << "No hay médicos registrados.\n";
+    }
+    else {
+        for (const auto& medico : medicos) {
+            medico.mostrarInformacion();
+            std::cout << "-------------------------\n";
+        }
+    }
+}
+
+//citas
 
 void Sistema::asignarCita() {
     if (pacientes.empty() || medicos.empty()) {
@@ -226,30 +309,6 @@ void Sistema::asignarCita() {
     }
 }
 
-void Sistema::mostrarPacientes() const {
-    if (pacientes.empty()) {
-        std::cout << "No hay pacientes registrados.\n";
-    }
-    else {
-        for (const auto& paciente : pacientes) {
-            paciente.mostrarInformacion();
-            std::cout << "-------------------------\n";
-        }
-    }
-}
-
-void Sistema::mostrarMedicos() const {
-    if (medicos.empty()) {
-        std::cout << "No hay médicos registrados.\n";
-    }
-    else {
-        for (const auto& medico : medicos) {
-            medico.mostrarInformacion();
-            std::cout << "-------------------------\n";
-        }
-    }
-}
-
 void Sistema::mostrarCitas() const {
     if (citas.empty()) {
         std::cout << "No hay citas registradas.\n";
@@ -261,6 +320,7 @@ void Sistema::mostrarCitas() const {
         }
     }
 }
+
 void Sistema::ordenarCitasPorFecha() {
     std::sort(citas.begin(), citas.end(), [](const Cita& a, const Cita& b) {
         return a.getFecha() < b.getFecha(); // Comparación lexicográfica de las fechas
@@ -384,23 +444,7 @@ void Sistema::modificarCita() {
     std::cout << "Cita no encontrada.\n";
 }
 
-void Sistema::buscarPacientesPorFecha(const std::string& fechaInicio, const std::string& fechaFin) {
-    bool encontrado = false;  // Bandera para verificar si se encontró algún paciente
-
-    for (const auto& cita : citas) {
-        if (cita.getFecha() >= fechaInicio && cita.getFecha() <= fechaFin) {
-            cita.getPaciente()->mostrarInformacion();  // Mostramos los datos del paciente
-            std::cout << "-------------------------\n";
-            encontrado = true;  // Marcamos que se encontró al menos un paciente
-        }
-    }
-
-    // Si no se encontró ningún paciente, mostrar un mensaje
-    if (!encontrado) {
-        std::cout << "No se encontraron pacientes en el rango de fechas proporcionado.\n";
-    }
-    std::cin.get();
-}
+//csv
 
 void Sistema::cargarMedicosDesdeCSV(const std::string& ruta) {
     std::ifstream archivo(ruta);
@@ -481,6 +525,8 @@ void Sistema::guardarPacientesEnCSV(const std::string& ruta) {
     }
     archivo.close();
 }
+
+//backup
 
 void Sistema::realizarBackup(const std::string& rutaBackup) {
     // Crear carpeta de respaldo si no existe
