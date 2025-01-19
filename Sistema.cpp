@@ -632,10 +632,22 @@ void Sistema::restaurarDesdeBackup(const std::string& rutaBackup) {
     std::string archivoCitas = rutaBackup + "/citas.csv";
 
     // Verificar la existencia de los archivos
-    if (!std::filesystem::exists(archivoPacientes) ||
-        !std::filesystem::exists(archivoMedicos) ||
-        !std::filesystem::exists(archivoCitas)) {
-        std::cerr << "Error: Uno o más archivos de respaldo no existen en la ruta especificada.\n";
+    bool errorDetectado = false;
+
+    if (!std::filesystem::exists(archivoPacientes)) {
+        std::cerr << "Error: Archivo de respaldo pacientes no encontrado en: " << archivoPacientes << "\n";
+        errorDetectado = true;
+    }
+    if (!std::filesystem::exists(archivoMedicos)) {
+        std::cerr << "Error: Archivo de respaldo médicos no encontrado en: " << archivoMedicos << "\n";
+        errorDetectado = true;
+    }
+    if (!std::filesystem::exists(archivoCitas)) {
+        std::cerr << "Error: Archivo de respaldo citas no encontrado en: " << archivoCitas << "\n";
+        errorDetectado = true;
+    }
+
+    if (errorDetectado) {
         return;
     }
 
@@ -651,3 +663,4 @@ void Sistema::restaurarDesdeBackup(const std::string& rutaBackup) {
 
     std::cout << "Restauración completada exitosamente desde el respaldo en: " << rutaBackup << "\n";
 }
+
