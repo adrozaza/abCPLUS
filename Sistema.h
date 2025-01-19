@@ -28,6 +28,7 @@ public:
     //historial
 
     void registrarHistorial();
+    void revisarHistorial(const std::string& id);
 
     //medicos
 

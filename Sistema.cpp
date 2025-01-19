@@ -204,6 +204,17 @@ void Sistema::registrarHistorial() {
     std::cout << "Paciente no encontrado.\n";
 }
 
+void Sistema::revisarHistorial(const std::string& id) {
+    for (const auto& paciente : pacientes) {
+        if (paciente.getId() == id) {
+            std::cout << "Historial clínico del paciente " << paciente.getNombre() << ":\n";
+            paciente.mostrarHistorial();
+            return;
+        }
+    }
+    std::cout << "Paciente no encontrado.\n";
+}
+
 //medicos
 
 bool Sistema::eliminarMedico(const std::string& id) {

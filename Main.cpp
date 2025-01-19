@@ -57,6 +57,44 @@ void menuBuscarPacientes(Sistema& sistema) {
     } while (opcion != 4);
 }
 
+void menuHistorial(Sistema& sistema) {
+    int opcionHistorial;
+    do {
+        system("cls");
+        std::cout << "--- Menú de Historial ---\n";
+        std::cout << "1. Registrar Historial\n";
+        std::cout << "2. Revisar Historial\n";
+        std::cout << "3. Volver al Menú Pacientes\n";
+        std::cout << "Seleccione una opción: ";
+        std::cin >> opcionHistorial;
+        std::cin.ignore();
+
+        switch (opcionHistorial) {
+        case 1:
+            sistema.registrarHistorial();
+            break;
+        case 2: {
+            std::string id;
+            std::cout << "Ingrese el ID del paciente para revisar su historial: ";
+            std::cin >> id;
+            sistema.revisarHistorial(id);
+            break;
+        }
+        case 3:
+            break;
+        default:
+            std::cout << "Opción inválida. Intente nuevamente.\n";
+        }
+
+        if (opcionHistorial != 3) {
+            std::cout << "\nPresione cualquier tecla para continuar...";
+            std::cin.ignore();
+            std::cin.get();
+        }
+    } while (opcionHistorial != 3);
+}
+
+
 void menuPacientes(Sistema& sistema) {
     int opcion;
     do {
@@ -67,7 +105,8 @@ void menuPacientes(Sistema& sistema) {
         std::cout << "3. Eliminar Paciente\n";
         std::cout << "4. Buscar Pacientes\n"; // Accede al submenú
         std::cout << "5. Modificar Paciente\n";
-        std::cout << "6. Volver al Menú Principal\n";
+        std::cout << "6. Historial\n";
+        std::cout << "7. Volver al Menú Principal\n";
         std::cout << "Seleccione una opción: ";
         std::cin >> opcion;
         std::cin.ignore();
@@ -105,16 +144,19 @@ void menuPacientes(Sistema& sistema) {
             break;
         }
         case 6:
+            menuHistorial(sistema);
+            break;
+        case 7:
             break;
         default:
             std::cout << "Opción inválida. Intente nuevamente.\n";
         }
 
-        if (opcion != 6) {
+        if (opcion != 7) {
             std::cout << "\nPresione cualquier tecla para continuar...";
             std::cin.get();
         }
-    } while (opcion != 6);
+    } while (opcion != 7);
 }
 
 //medicos

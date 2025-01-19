@@ -1,6 +1,19 @@
 ﻿#include "Paciente.h"
 #include <sstream>
 
+void Paciente::mostrarHistorial() const {
+    if (historialClinico.empty()) {
+        std::cout << "No hay historial clínico registrado para este paciente.\n";
+    }
+    else {
+        std::cout << "Historial clínico del paciente:\n";
+        for (const auto& registro : historialClinico) {
+            std::cout << registro << "\n";
+        }
+    }
+}
+
+
 void Paciente::mostrarInformacion() const {
     std::cout << "ID: " << id << "\nNombre: " << nombre
         << "\nFecha de Nacimiento: " << fechaNacimiento

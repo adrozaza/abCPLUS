@@ -41,6 +41,7 @@ public:
     std::string getEmail() const;
 
     void agregarHistorial(const std::string& entrada) { historialClinico.push_back(entrada); }
+    void mostrarHistorial() const;
     void mostrarInformacion() const;
 
     std::string toCSV() const; // Serializa un paciente a CSV.
