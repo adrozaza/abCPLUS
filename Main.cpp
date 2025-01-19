@@ -150,9 +150,10 @@ void menuCitas(Sistema& sistema) {
         std::cout << "3. Mostrar Citas\n";
         std::cout << "4. Ordenar Citas por Fecha\n";
         std::cout << "5. Ordenar Citas por Urgencia\n";
-        std::cout << "6. Eliminar Cita\n";
-        std::cout << "7. Modificar Cita\n";
-        std::cout << "8. Volver al Menú Principal\n";
+        std::cout << "6. Listar Citas por Médico o Especialidad\n"; // Nueva opción
+        std::cout << "7. Eliminar Cita\n";
+        std::cout << "8. Modificar Cita\n";
+        std::cout << "9. Volver al Menú Principal\n";
         std::cout << "Seleccione una opción: ";
         std::cin >> opcion;
         std::cin.ignore();
@@ -176,23 +177,26 @@ void menuCitas(Sistema& sistema) {
             sistema.mostrarCitas();
             break;
         case 6:
-            sistema.eliminarCita();
+            sistema.listarCitasPorMedicoOEspecialidad();
             break;
         case 7:
-            sistema.modificarCita();
+            sistema.eliminarCita();
             break;
         case 8:
+            sistema.modificarCita();
+            break;
+        case 9:
             break;
         default:
             std::cout << "Opción inválida. Intente nuevamente.\n";
             break;
         }
 
-        if (opcion != 8) {
+        if (opcion != 9) {
             std::cout << "\nPresione cualquier tecla para continuar...";
             std::cin.get();
         }
-    } while (opcion != 8);
+    } while (opcion != 9);
 }
 
 void menuBackup(Sistema& sistema) {

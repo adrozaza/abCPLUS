@@ -34,6 +34,7 @@ public:
     bool eliminarMedico(const std::string& id); // Ahora recibe un ID y devuelve un bool
     void listarMedicosPorEspecialidad();
     void mostrarMedicos() const;
+    void listarCitasPorMedicoOEspecialidad() const;
 
     //citas
 

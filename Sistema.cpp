@@ -526,6 +526,56 @@ void Sistema::guardarPacientesEnCSV(const std::string& ruta) {
     archivo.close();
 }
 
+void Sistema::listarCitasPorMedicoOEspecialidad() const {
+    int opcion;
+    std::cout << "--- Listar Citas por Médico o Especialidad ---\n";
+    std::cout << "1. Listar por Médico\n";
+    std::cout << "2. Listar por Especialidad\n";
+    std::cout << "Seleccione una opción: ";
+    std::cin >> opcion;
+    std::cin.ignore();
+
+    if (opcion == 1) {
+        std::string idMedico;
+        std::cout << "Ingrese el ID del médico: ";
+        std::cin >> idMedico;
+        std::cin.ignore();
+
+        bool encontrado = false;
+        for (const auto& cita : citas) {
+            if (cita.getMedico()->getId() == idMedico) {
+                cita.mostrarInformacion();
+                encontrado = true;
+            }
+        }
+
+        if (!encontrado) {
+            std::cout << "No se encontraron citas para el médico con ID: " << idMedico << "\n";
+        }
+    }
+    else if (opcion == 2) {
+        std::string especialidad;
+        std::cout << "Ingrese la especialidad: ";
+        std::getline(std::cin, especialidad);
+
+        bool encontrado = false;
+        for (const auto& cita : citas) {
+            if (cita.getMedico()->getEspecialidad() == especialidad) {
+                cita.mostrarInformacion();
+                encontrado = true;
+            }
+        }
+
+        if (!encontrado) {
+            std::cout << "No se encontraron citas para la especialidad: " << especialidad << "\n";
+        }
+    }
+    else {
+        std::cout << "Opción inválida.\n";
+    }
+}
+
+
 //backup
 
 void Sistema::realizarBackup(const std::string& rutaBackup) {
