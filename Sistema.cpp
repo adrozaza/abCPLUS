@@ -222,13 +222,27 @@ bool Sistema::eliminarMedico(const std::string& id) {
 
 void Sistema::listarMedicosPorEspecialidad() {
     std::string especialidad;
-    std::cout << "Ingrese la especialidad: ";
-    std::cin.ignore();
-    std::getline(std::cin, especialidad);
+
+    std::cout << "Especialidades registradas:\n";
+    for (const auto& medico : medicos) {
+        std::cout << medico.getEspecialidad() << "\n";
+    }
+
+    std::cout << "\nIngrese la especialidad: ";
+
+    std::getline(std::cin, especialidad); // Leer la especialidad completa
+
+    // Convertir a minúsculas para comparación insensible
+    std::transform(especialidad.begin(), especialidad.end(), especialidad.begin(), ::tolower);
+
+    std::cout << "\nLo que has escrito: " << especialidad << "\n";
 
     bool encontrado = false;
     for (const auto& medico : medicos) {
-        if (medico.getEspecialidad() == especialidad) {
+        std::string medicoEspecialidad = medico.getEspecialidad();
+        std::transform(medicoEspecialidad.begin(), medicoEspecialidad.end(), medicoEspecialidad.begin(), ::tolower);
+
+        if (medicoEspecialidad == especialidad) {
             medico.mostrarInformacion();
             encontrado = true;
         }
