@@ -608,7 +608,7 @@ void Sistema::realizarBackup(const std::string& rutaBackup) {
     std::tm tiempoLocal;
     localtime_s(&tiempoLocal, &ahora); // Para Windows, usa localtime_r en Linux/MacOS
 
-    // Crear un sufijo con la fecha y hora
+    // Crear un sufijo con la fecha y hora en formato YYYYMMDD_HHMMSS
     std::ostringstream sufijo;
     sufijo << std::put_time(&tiempoLocal, "%Y%m%d_%H%M%S");
 
@@ -626,41 +626,64 @@ void Sistema::realizarBackup(const std::string& rutaBackup) {
 }
 
 void Sistema::restaurarDesdeBackup(const std::string& rutaBackup) {
-    // Archivos de respaldo
-    std::string archivoPacientes = rutaBackup + "/pacientes.csv";
-    std::string archivoMedicos = rutaBackup + "/medicos.csv";
-    std::string archivoCitas = rutaBackup + "/citas.csv";
-
-    // Verificar la existencia de los archivos
-    bool errorDetectado = false;
-
-    if (!std::filesystem::exists(archivoPacientes)) {
-        std::cerr << "Error: Archivo de respaldo pacientes no encontrado en: " << archivoPacientes << "\n";
-        errorDetectado = true;
-    }
-    if (!std::filesystem::exists(archivoMedicos)) {
-        std::cerr << "Error: Archivo de respaldo médicos no encontrado en: " << archivoMedicos << "\n";
-        errorDetectado = true;
-    }
-    if (!std::filesystem::exists(archivoCitas)) {
-        std::cerr << "Error: Archivo de respaldo citas no encontrado en: " << archivoCitas << "\n";
-        errorDetectado = true;
+    // Obtener los nombres de los archivos en el directorio de respaldo
+    std::vector<std::string> archivosEncontrados;
+    for (const auto& entry : std::filesystem::directory_iterator(rutaBackup)) {
+        archivosEncontrados.push_back(entry.path().filename().string());
     }
 
-    if (errorDetectado) {
+    bool archivosEncontradosCorrectamente = false;
+
+    for (const auto& nombreArchivo : archivosEncontrados) {
+        if (nombreArchivo.find("pacientes_") != std::string::npos) {
+            std::string archivoPacientes = rutaBackup + "/" + nombreArchivo;
+            if (std::filesystem::exists(archivoPacientes)) {
+                cargarPacientesDesdeCSV(archivoPacientes);
+                archivosEncontradosCorrectamente = true;
+            }
+        }
+        if (nombreArchivo.find("medicos_") != std::string::npos) {
+            std::string archivoMedicos = rutaBackup + "/" + nombreArchivo;
+            if (std::filesystem::exists(archivoMedicos)) {
+                cargarMedicosDesdeCSV(archivoMedicos);
+                archivosEncontradosCorrectamente = true;
+            }
+        }
+    }
+
+    if (!archivosEncontradosCorrectamente) {
+        std::cerr << "Error: No se encontraron los archivos de respaldo de médicos o pacientes en la ruta especificada.\n";
         return;
     }
 
-    // Limpiar las listas actuales
-    pacientes.clear();
-    medicos.clear();
+    // Verificar que los archivos de médicos y pacientes hayan sido cargados correctamente
+    if (pacientes.empty()) {
+        std::cerr << "Error: No se encontraron pacientes en el archivo de respaldo.\n";
+        return;
+    }
+    if (medicos.empty()) {
+        std::cerr << "Error: No se encontraron médicos en el archivo de respaldo.\n";
+        return;
+    }
+
+    // Limpiar las citas actuales antes de cargar las nuevas
     citas.clear();
 
-    // Cargar los datos desde los archivos de respaldo
-    cargarPacientesDesdeCSV(archivoPacientes);
-    cargarMedicosDesdeCSV(archivoMedicos);
-    cargarCitasDesdeCSV(archivoCitas);
+    // Descargar las citas ahora que los médicos y pacientes han sido cargados
+    for (const auto& nombreArchivo : archivosEncontrados) {
+        if (nombreArchivo.find("citas_") != std::string::npos) {
+            std::string archivoCitas = rutaBackup + "/" + nombreArchivo;
+            if (std::filesystem::exists(archivoCitas)) {
+                cargarCitasDesdeCSV(archivoCitas);
+                archivosEncontradosCorrectamente = true;
+            }
+        }
+    }
+
+    if (citas.empty()) {
+        std::cerr << "Error: No se encontraron citas en el archivo de respaldo.\n";
+        return;
+    }
 
     std::cout << "Restauración completada exitosamente desde el respaldo en: " << rutaBackup << "\n";
 }
-
